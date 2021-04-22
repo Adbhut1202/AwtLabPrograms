@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+ 
+
+    <head>
+        <title>
+            firebase    
+        </title>
+        <style>
+            table, th, td {
+  border: 1px solid black;
+}
+        </style>
+    </head>
+<body>
+    <table>
+        <tr>
+        <td colspan="2"><label>NAME:</label></td>
+        <td colspan="3"><input id="name" type="text" placeholder="enter your name"><br></td>
+        </tr>
+       <tr>
+       <td colspan="2"> <label>ROLL NO:</label></td>
+        <td colspan="3"><input id="rollno" type="text" placeholder="enter your rollno"></td>
+        </tr>
+        <tr>
+        <td colspan="2"><label>GMAIL:</label></td>
+        <td colspan="3"><input id="gmail" type="text" placeholder="enter your gmail"></td>
+        </tr>
+       <tr>
+       <td> <button id="insert">INSERT</button></td>
+        <td><button id="select">SELECT</button> </td>
+        <td><button id="update">UPDATE</button></td>
+        <td><button id="delete">DELETE</button></td>
+        <td><button id="display" onclick="display()">DISPLAY</button></td>
+       </tr>
+        <center>
+            <table id="table">
+                <tr>
+                    <th>name</th>
+                    <th>email</th>
+                    <th>roll</th>
+                </tr>
+            </table>
+        </center>
+
+
+        <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script> 
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyBeVzzw8RFS0fMGlHiZwQTThhHIzk3uz4I",
+    authDomain: "fir-43dc0.firebaseapp.com",
+    projectId: "fir-43dc0",
+    storageBucket: "fir-43dc0.appspot.com",
+    messagingSenderId: "14070772506",
+    appId: "1:14070772506:web:482a07310367171c84f2a3"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+    //data
+    var name1,gmail1,rollno1;
+    var dbref=firebase.database().ref().child("person")
+    function Data(){
+        name1=document.getElementById('name').value;
+        gmail1=document.getElementById('gmail').value;
+        rollno1=document.getElementById('rollno').value;
+    }
+    //insert
+    
+    document.getElementById('insert').onclick=function(){
+        name=document.getElementById('name').value;
+        gmail=document.getElementById('gmail').value;
+        rollno=document.getElementById('rollno').value;
+            console.log('insert')
+            dbref.child(rollno).set({
+                NAME:name,
+                Gmail:gmail,
+                RollNo:rollno
+            })
+    }
+    //selection
+    document.getElementById("select").onclick=function(){
+        name=document.getElementById('name').value;
+        gmail=document.getElementById('gmail').value;
+        rollno=document.getElementById('rollno').value;
+       firebase.database().ref('person/').get().then((snapshot) => {
+            if (snapshot.exists()) {
+                snapshot.forEach(function(snap){
+                    if(snap.val().RollNo==rollno){
+                        document.getElementById('name').value= snap.val().NAME;
+                        document.getElementById('gmail').value = snap.val().Gmail;
+                       
+                    }
+                })
+            } 
+            else {
+                console.log("No data available");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+    }
+    //update
+    document.getElementById('update').onclick=function(){
+        name1=document.getElementById('name').value;
+        gmail1=document.getElementById('gmail').value;
+        rollno1=document.getElementById('rollno').value;
+         dbref.child(rollno1).update({
+                NAME:name1,
+                Gmail:gmail1,
+                RollNo:rollno1
+            })
+    }
+    //delete
+
+    document.getElementById('delete').onclick=function(){
+            var rno=window.prompt("Enter rollno:")
+            dbref.child(rno).remove();
+    }
+    
+    function display(){
+        Data();
+        firebase.database().ref('person/').get().then((snapshot) => {
+  if (snapshot.exists()) {
+    snapshot.forEach(function(snap){
+        var row = document.getElementById("table").insertRow(-1);
+  var cell1 = row.insertCell(-1);
+  var cell2 = row.insertCell(-1);
+  var cell3 = row.insertCell(-1);
+  cell1.innerHTML = snap.val().NAME;
+  cell2.innerHTML = snap.val().Gmail;
+  cell3.innerHTML = snap.val().RollNo;
+    })
+  } else {
+    console.log("No data available");
+  }
+}).catch((error) => {
+  console.error(error);
+});
+    }
+    
+
+
+</script>
+
+    </body>
+</html>
