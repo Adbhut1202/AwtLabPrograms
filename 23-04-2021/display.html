@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+</head>
+<body onload="start()">
+    <div id="time"></div>
+    <script>
+        function start() {
+            var d=new Date();
+            var hr=d.getHours();
+            var min=d.getMinutes();
+            var sec=d.getSeconds();
+            ampm=(hr<12)?"AM":"PM";
+            hr=(hr==0)?12:hr;
+            hr=(hr>12)?hr-12:hr;
+            
+            document.getElementById("time").innerHTML="Date : "+d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear()+"<br>Time : "+hr+":"+min+":"+sec+" "+ampm;            
+            var time = setTimeout(function(){
+                                    start() 
+                                  }, 1000);
+        }
+    </script>
+</body>
+</html>
